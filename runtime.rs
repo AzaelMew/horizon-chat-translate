@@ -14,7 +14,7 @@ use crate::game::Game;
 use horizon_client::text::{ClickEvent, Style, Text};
 
 const ID: &str = "chat_translate";
-const VERSION: &str = "0.3.1";
+const VERSION: &str = "0.3.2";
 /// The button's command; typed by hand, `/chattr lang <code>` sets the target language.
 const COMMAND: &str = "chattr";
 /// `/trans <language> <message>`: your language in (`/chattr lang`, English by default), the
@@ -183,9 +183,9 @@ pub fn tick(game: &mut Game<'_>) {
     for item in done {
         match item {
             Done::Under(id, text) => {
-                let (ticks, chat, font) = (game.ticks, &mut game.ui.chat, &game.gui.atlas.font);
+                let (chat, font) = (&mut game.ui.chat, &game.gui.atlas.font);
                 // The line left the chat's history: the bottom is the best place left.
-                if !chat.translate_insert(font, &marker(id), text.clone(), ticks) {
+                if !chat.translate_insert(font, &marker(id), text.clone()) {
                     game.native_feedback(text);
                 }
             }

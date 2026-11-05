@@ -2,13 +2,12 @@
 // `messages`; the messages are newest first, so "under" a message is its own index.
 impl super::Chat {
     /// Shows `content` as a message directly under the one holding a click event that runs
-    /// `marker`. False when that message has left the history (the caller shows it at the bottom).
+    /// `marker`, with that message's time. False when that message has left the history (the caller shows it at the bottom).
     pub fn translate_insert(
         &mut self,
         font: &crate::font::Font,
         marker: &str,
         content: super::Text,
-        ticks: u64,
     ) -> bool {
         let Some(at) = self.messages.iter().position(|m| {
             m.content.chars().any(|(_, style)| {
@@ -17,11 +16,12 @@ impl super::Chat {
         }) else {
             return false;
         };
-        let source = self.messages[at].source.clone();
+        // The translation fades with its line: it takes the line's time, not the time of the click.
+        let (source, added) = (self.messages[at].source.clone(), self.messages[at].added);
         self.messages.insert(
             at,
             super::Message {
-                added: ticks,
+                added,
                 content,
                 tag: None,
                 source,
