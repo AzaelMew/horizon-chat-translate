@@ -12,7 +12,7 @@ Translation goes to Google's free endpoint first. If Google refuses (it rate lim
 
 Google's free endpoint is unofficial and starts answering HTTP 429 after fairly light use. A free DeepL key makes translation keep working then, and Google stays the first choice so DeepL's monthly allowance is spent only when Google refuses.
 
-1. Make a free account at https://www.deepl.com/pro-api (the **API Free** plan, 500,000 characters per month; signing up may ask for a card for verification). Copy the key; a free key ends in `:fx`.
+1. Make a free account at https://www.deepl.com/pro-api (the **API Free** plan, 500,000 characters per month). Copy the key; a free key ends in `:fx`.
 2. In the game, run `/chattr key <your key>`. It is saved in `config/chat_translate.json` (readable by your user only). The command is run by the mod and is **not** sent to the server and **not** written to the chat history or `command_history.txt`. Anyone watching your screen can still see it while you type it.
 3. That's all. `[t]` and `/trans` now go Google, then DeepL.
 
