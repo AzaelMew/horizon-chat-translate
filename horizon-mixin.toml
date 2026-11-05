@@ -1,11 +1,79 @@
-# Chat Translate: a [T] button at the end of every chat line; click it and the
-# line is translated with Google's free web endpoint (translate.googleapis.com, no key).
+# Chat Translate: a dark grey [t] at the end of every chat line. Click it and the line is
+# translated with Google's free web endpoint (no key) and shown directly under it.
+# /trans <language> <message> sends your English message translated.
+#
+# A mixin bundle, not a trait mod: putting a line under another one needs the chat's private
+# list of messages, which only code compiled into the game can reach.
 [mod]
 id = "chat_translate"
-version = "0.2.2"
+version = "0.3.0"
 
 [compatibility]
 horizon_revision = "83ad384f48d0742746d518737511882680aab5b7"
 
-[api]
-path = "api"
+# `Chat::translate_insert`: a new message right under the one with a given click command.
+[[module]]
+id = "insert"
+file = "crates/horizon-client-render/src/chat.rs"
+name = "translate_insert"
+source = "chat_insert.rs"
+
+# Everything else: state, Google, the commands, the [t] button.
+[[module]]
+id = "runtime"
+file = "crates/horizon-client/src/game.rs"
+name = "chat_translate"
+source = "runtime.rs"
+
+# The [t] button, on every line before it shows.
+[[injection]]
+id = "received"
+kind = "HEAD"
+target = "horizon_client::game::remote::Game<'_>::chat_received"
+helper = "received.rs"
+bindings = [
+  { name = "overlay", ty = "bool", value = "overlay" },
+  { name = "line", ty = "&mut horizon_client::text::Text", value = "&mut *line" },
+]
+
+# /chattr <id> (the button), /chattr lang <code>, /trans <language> <message>.
+[[injection]]
+id = "command"
+kind = "HEAD"
+target = "horizon_client::game::native_hooks::Game<'_>::native_command"
+helper = "command.rs"
+bindings = [
+  { name = "game", ty = "&mut crate::game::Game<'_>", value = "&mut *self" },
+  { name = "command", ty = "&str", value = "command" },
+  { name = "ran", ty = "&mut bool", value = "&mut *ran" },
+]
+
+# So the chat box completes the commands.
+[[injection]]
+id = "commands"
+kind = "HEAD"
+target = "horizon_client::game::native_hooks::Game<'_>::native_commands"
+helper = "commands.rs"
+bindings = [
+  { name = "commands", ty = "&mut Vec<&'static str>", value = "&mut *commands" },
+]
+
+# Finished translations reach the chat on the game thread, once a tick.
+[[injection]]
+id = "tick"
+kind = "HEAD"
+target = "horizon_client::game::native_hooks::Game<'_>::native_tick"
+helper = "tick.rs"
+bindings = [
+  { name = "game", ty = "&mut crate::game::Game<'_>", value = "&mut *self" },
+]
+
+# A row in Options > Mods, so the game keeps the mod's switch in horizon-mods.txt.
+[[injection]]
+id = "list"
+kind = "HEAD"
+target = "horizon_client::game::native_hooks::Game<'_>::native_mods"
+helper = "list.rs"
+bindings = [
+  { name = "mods", ty = "&mut Vec<crate::game::native_hooks::NativeMod>", value = "&mut *mods" },
+]
