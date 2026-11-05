@@ -6,7 +6,7 @@
 # list of messages, which only code compiled into the game can reach.
 [mod]
 id = "chat_translate"
-version = "0.3.2"
+version = "0.4.0"
 
 [compatibility]
 horizon_revision = "83ad384f48d0742746d518737511882680aab5b7"
@@ -76,4 +76,17 @@ target = "horizon_client::game::native_hooks::Game<'_>::native_mods"
 helper = "list.rs"
 bindings = [
   { name = "mods", ty = "&mut Vec<crate::game::native_hooks::NativeMod>", value = "&mut *mods" },
+]
+
+# The chat box keeps typed commands in command_history.txt. `/chattr key <key>` is run here,
+# before the line reaches the history, and goes no further.
+[[injection]]
+id = "history"
+kind = "HEAD"
+cancellable = true
+target = "horizon_client::game::chat::Game<'_>::handle_chat_input"
+helper = "history.rs"
+bindings = [
+  { name = "game", ty = "&mut crate::game::Game<'_>", value = "&mut *self" },
+  { name = "message", ty = "&str", value = "message" },
 ]
