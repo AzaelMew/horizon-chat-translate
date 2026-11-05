@@ -27,7 +27,7 @@ After a Google 429 the mod leaves Google alone for 10 minutes and goes straight 
 
 ## Install
 
-1. Download `chat_translate-0.4.0.hnmod` from the [latest release](../../releases/latest).
+1. Download `chat_translate-0.4.1.hnmod` from the [latest release](../../releases/latest).
 2. Put it in your game folder's `horizon-native-mods/` (on Linux: `~/.local/share/horizon/horizon-native-mods/`).
 3. Make sure `mod.chat_translate:true` is in `horizon-mods.txt` (Options > Mods shows a Chat Translate row).
 4. Build the game with it: `horizon-launcher native-build --instance <instance> --trust-native-code --allow-version-mismatch`, then restart Horizon.
@@ -36,9 +36,10 @@ Native mods are compiled into the game and run with your user's rights, with no 
 
 ## Requirements
 
-- Pinned to Horizon commit [`83ad384`](https://github.com/horizon-rust/horizon/commit/83ad384f48d0742746d518737511882680aab5b7). It needs the `client_chat_received` hook (hooks API 403 or later), which the 2026-11-04 nightly (`6475f62`, API 359) does not have.
+- Pinned to Horizon commit [`66f3981`](https://github.com/horizon-rust/horizon/commit/66f3981f522b24c250b21523a70080965b940424) (Nightly 2026-11-05, `66f3981`). It needs the `client_chat_received` hook, which that commit has. Builds for older nightlies need an older release of this mod.
 - The launcher builds other native mods you have installed on that same commit. Mods pinned to older commits may need repinning.
-- Tested only by compiling against `83ad384`, a unit test of the placement logic on the game's real chat code, and live calls to Google. Placement and scrolling in a running game are lightly tested; please report problems.
+- 0.4.1 adapts the chat insert to that commit's chat, where a message also carries its time, a repeat count and its wrapped line count: a translation takes its line's tick and time (so it fades and is timestamped with it), counts once, and is laid out like any message. A unit test in `chat_insert.rs` runs against the game's real chat code.
+- Verified against `66f3981`: the mixins apply, the game crate compiles with all injections, and the chat tests pass. Not tested in a running game, and live Google/DeepL calls were not repeated for this release; please report problems.
 
 ## How it works
 
@@ -62,7 +63,7 @@ The game thread never waits on the network. A worker thread asks Google first an
 
 ## Build
 
-The launcher builds it. Packaging a `.hnmod` by hand: a zip holding `horizon-native.json` (`{"schema":1,"id":"chat_translate","version":"0.4.0","game":"26.3","horizon":"<40-hex commit>","mixins":"<horizon-mixins commit>"}`) and `mixins/chat_translate/` with the files in this repository. `horizon_revision` in `horizon-mixin.toml` must equal `horizon` in the JSON.
+The launcher builds it. Packaging a `.hnmod` by hand: a zip holding `horizon-native.json` (`{"schema":1,"id":"chat_translate","version":"0.4.1","game":"26.3","horizon":"<40-hex commit>","mixins":"<horizon-mixins commit>"}`) and `mixins/chat_translate/` with the files in this repository. `horizon_revision` in `horizon-mixin.toml` must equal `horizon` in the JSON.
 
 ## License
 

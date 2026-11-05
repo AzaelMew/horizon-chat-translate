@@ -6,10 +6,10 @@
 # list of messages, which only code compiled into the game can reach.
 [mod]
 id = "chat_translate"
-version = "0.4.0"
+version = "0.4.1"
 
 [compatibility]
-horizon_revision = "83ad384f48d0742746d518737511882680aab5b7"
+horizon_revision = "66f3981f522b24c250b21523a70080965b940424"
 
 # `Chat::translate_insert`: a new message right under the one with a given click command.
 [[module]]

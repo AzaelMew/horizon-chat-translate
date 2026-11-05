@@ -14,7 +14,7 @@ use crate::game::Game;
 use horizon_client::text::{ClickEvent, Style, Text};
 
 const ID: &str = "chat_translate";
-const VERSION: &str = "0.4.0";
+const VERSION: &str = "0.4.1";
 /// The button's command; typed by hand, `/chattr lang <code>` sets the target language.
 const COMMAND: &str = "chattr";
 /// `/trans <language> <message>`: your language in (`/chattr lang`, English by default), the
