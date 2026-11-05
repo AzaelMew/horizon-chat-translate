@@ -1,0 +1,11 @@
+# Chat Translate: a [T] button at the end of every chat line; click it and the
+# line is translated with Google's free web endpoint (translate.googleapis.com, no key).
+[mod]
+id = "chat_translate"
+version = "0.2.2"
+
+[compatibility]
+horizon_revision = "83ad384f48d0742746d518737511882680aab5b7"
+
+[api]
+path = "api"
