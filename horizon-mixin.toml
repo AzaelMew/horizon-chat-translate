@@ -6,7 +6,7 @@
 # list of messages, which only code compiled into the game can reach.
 [mod]
 id = "chat_translate"
-version = "0.3.0"
+version = "0.3.1"
 
 [compatibility]
 horizon_revision = "83ad384f48d0742746d518737511882680aab5b7"

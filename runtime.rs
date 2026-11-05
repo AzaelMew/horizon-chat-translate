@@ -14,10 +14,11 @@ use crate::game::Game;
 use horizon_client::text::{ClickEvent, Style, Text};
 
 const ID: &str = "chat_translate";
-const VERSION: &str = "0.3.0";
+const VERSION: &str = "0.3.1";
 /// The button's command; typed by hand, `/chattr lang <code>` sets the target language.
 const COMMAND: &str = "chattr";
-/// `/trans <language> <message>`: English in, the language out, sent as chat.
+/// `/trans <language> <message>`: your language in (`/chattr lang`, English by default), the
+/// asked language out, sent as chat.
 const SEND_COMMAND: &str = "trans";
 /// Lines remembered for their button. A button on an older line says it expired.
 const KEEP: usize = 400;
@@ -284,9 +285,11 @@ fn translate(game: &mut Game<'_>, id: u64) {
     }
 }
 
-/// `/trans <language> <message>`: the message is English; its translation is sent as chat.
+/// `/trans <language> <message>`: the message is in the language set with `/chattr lang`
+/// (English by default); its translation is sent as chat.
 fn send_translated(game: &mut Game<'_>, args: &str) {
-    let usage = format!("Usage: /{SEND_COMMAND} <language> <message>  (English in)");
+    let mine = language();
+    let usage = format!("Usage: /{SEND_COMMAND} <language> <message>  ({mine} in; change with /{COMMAND} lang <code>)");
     let Some((language, message)) = args.split_once(char::is_whitespace) else {
         return game.native_feedback(note(usage));
     };
@@ -302,7 +305,7 @@ fn send_translated(game: &mut Game<'_>, args: &str) {
     let spawned = std::thread::Builder::new()
         .name("chat-translate-send".into())
         .spawn(move || {
-            let result = fetch(&message, "en", &code);
+            let result = fetch(&message, &mine, &code);
             with_state(|s| match result {
                 Ok((_, translated)) => s.outbox.push(translated),
                 Err(e) => s.done.push(Done::Note(error(format!("Translate failed: {e}")))),

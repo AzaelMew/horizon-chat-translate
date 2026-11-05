@@ -3,14 +3,14 @@
 A native mod for [Horizon](https://github.com/horizon-rust/horizon) that translates chat with Google's free web translate endpoint. No API key.
 
 - A dark grey **`[t]`** is added to the end of every chat line. Click it and the translation appears **directly under that line**, even if newer messages have arrived since.
-- **`/trans <language> <message>`** translates an English message into another language and sends it as chat. The language can be a code (`fi`, `pl`, `zh-CN`) or an English name (`finnish`, `german`, ...).
-- **`/chattr lang <code>`** sets the language `[t]` translates into (default `en`). It is saved in `config/chat_translate.json`. The source language is detected automatically.
+- **`/trans <language> <message>`** translates your message into another language and sends it as chat. The message is in your language (see `/chattr lang`, English by default). The language can be a code (`fi`, `pl`, `zh-CN`) or an English name (`finnish`, `german`, ...).
+- **`/chattr lang <code>`** sets your language: `[t]` translates chat into it, and `/trans` takes it as the language you write in (default `en`). It is saved in `config/chat_translate.json`. The source language is detected automatically.
 
 Requests only happen when you click `[t]` or run `/trans`. They run on a background thread and never block the game thread.
 
 ## Install
 
-1. Download `chat_translate-0.3.0.hnmod` from the [latest release](../../releases/latest).
+1. Download `chat_translate-0.3.1.hnmod` from the [latest release](../../releases/latest).
 2. Put it in your game folder's `horizon-native-mods/` (on Linux: `~/.local/share/horizon/horizon-native-mods/`).
 3. Make sure `mod.chat_translate:true` is in `horizon-mods.txt` (Options > Mods shows a Chat Translate row).
 4. Build the game with it: `horizon-launcher native-build --instance <instance> --trust-native-code --allow-version-mismatch`, then restart Horizon.
@@ -45,7 +45,7 @@ The game thread never waits on the network. A worker thread asks Google first an
 
 ## Build
 
-The launcher builds it. Packaging a `.hnmod` by hand: a zip holding `horizon-native.json` (`{"schema":1,"id":"chat_translate","version":"0.3.0","game":"26.3","horizon":"<40-hex commit>","mixins":"<horizon-mixins commit>"}`) and `mixins/chat_translate/` with the files in this repository. `horizon_revision` in `horizon-mixin.toml` must equal `horizon` in the JSON.
+The launcher builds it. Packaging a `.hnmod` by hand: a zip holding `horizon-native.json` (`{"schema":1,"id":"chat_translate","version":"0.3.1","game":"26.3","horizon":"<40-hex commit>","mixins":"<horizon-mixins commit>"}`) and `mixins/chat_translate/` with the files in this repository. `horizon_revision` in `horizon-mixin.toml` must equal `horizon` in the JSON.
 
 ## License
 
